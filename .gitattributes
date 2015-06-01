@@ -1,0 +1,2 @@
+*.bed filter=lfs diff=lfs merge=lfs -crlf
+*.bt2 filter=lfs diff=lfs merge=lfs -crlf
