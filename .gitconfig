@@ -1,5 +1,5 @@
 [lfs]
-    url = "https://orcan.stanford.edu:9999/atac/atac"
+    url = "https://orcan.stanford.edu:9999/atac/atacData"
 
 [http]
     sslverify = false
