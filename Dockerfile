@@ -47,6 +47,7 @@ RUN yaourt -Sa --needed --noconfirm bedtools
 
 # install picard-tools
 RUN yaourt -Sa --needed --noconfirm picard-tools
+ENV PICARDROOT "/usr/share/java/picard-tools"
 
 # install ucsc tools
 RUN yaourt -Sa --needed --noconfirm ucsc-kent-genome-tools
@@ -79,4 +80,4 @@ WORKDIR /root
 ADD pipelines /pipelines
 
 # add atac pipeline to PATH
-env PATH /pipelines/atac:/usr/bin/kentUtils:$PATH
+ENV PATH /pipelines/atac:/usr/bin/kentUtils:$PATH
