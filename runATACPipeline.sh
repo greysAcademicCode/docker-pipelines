@@ -6,6 +6,11 @@
 # update the docker image (if needed)
 [ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
 
+# NOTE: If you get an error here: "FATA[0002] Error: image greyson/pipelines:latest not found" then make sure
+# A: you're logged in with your docker user (run `docker login`)
+# and
+# B: Your docker user has permission to download the greyson/pipelines image (email grey@christoforo.net to ask)
+
 BASEDIR="$(pwd)"
 
 # path to directory containing vplot index files
@@ -34,6 +39,7 @@ GENDER=male
 
 # threads to use for alignment
 THREADS=4
+#THREADS=$(nproc)
 
 # the following is generally not user editable
 
@@ -73,10 +79,11 @@ for DATAPATH in "${INPUT_DIR}"/*/ ; do
   if [ "$USE_DOCKER" = true ] ; then
     docker stop atac
     docker rm atac
-    DOCKER_PREFIX="docker run -v ${BT2INDEX}:${BT2INDEX} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
+    DOCKER_PREFIX="docker run -v ${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
   fi
+  #$DOCKER_PREFIX bash
   $DOCKER_PREFIX ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"
-  # [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_FOLDER}"
-  # chmod -R o+r "${OUTPUT_FOLDER}"
+  [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_FOLDER}"
+  chmod -R o+r "${OUTPUT_FOLDER}"
   # echo ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${OUTPUT_FOLDER}"
 done
