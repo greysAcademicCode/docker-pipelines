@@ -1,0 +1,4 @@
+from:
+ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR193/004/SRR1930174/SRR1930174_1.fastq.gz
+and
+ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR193/004/SRR1930174/SRR1930174_2.fastq.gz
