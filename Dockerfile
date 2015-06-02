@@ -1,5 +1,6 @@
 FROM l3iggs/archlinux-aur
 MAINTAINER Grey Christoforo <grey@christoforo.net>
+# See [the wiki](https://github.com/greysAcademicCode/docker-pipelines/wiki) for more details.
 
 # upldate master package list
 RUN sudo pacman -Sy
