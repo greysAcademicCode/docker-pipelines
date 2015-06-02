@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # example Usage:
-# USE_DOCKER=true ./runATACPipeline.sh ./inputData/human hg19
+# USE_DOCKER=true ./runATACPipeline.sh ./inputData/mouse mm9
 
 # update the docker image (if needed)
 [ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
