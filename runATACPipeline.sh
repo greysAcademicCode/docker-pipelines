@@ -73,12 +73,14 @@ for DATAPATH in "${INPUT_DIR}"/*/ ; do
 
   # input data files MUST have "R1" or "R2" before "fastq" in their file names
   READ1FILE=$(find "${DATAPATH}" -type f -name *R1*fastq*)
+  echo "Found read #1 input file: $READ1FILE"
   READ2FILE=$(find "${DATAPATH}" -type f -name *R2*fastq*)
+  echo "Found read #2 input file: $READ2FILE"
 
   # run the atac pipeline
   if [ "$USE_DOCKER" = true ] ; then
-    docker stop atac
-    docker rm atac
+    docker stop atac >/dev/null 2>/dev/null
+    docker rm atac >/dev/null 2>/dev/null
     DOCKER_PREFIX="docker run -v ${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
   fi
   #$DOCKER_PREFIX bash
