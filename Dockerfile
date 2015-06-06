@@ -55,9 +55,6 @@ RUN yaourt -Sa --needed --noconfirm ucsc-kent-genome-tools
 # install preseq
 RUN yaourt -Sa --needed --noconfirm preseq
 
-# install texlive
-RUN sudo pacman -S --needed --noconfirm texlive-core
-
 # install MACS2
 RUN yaourt -Sa --needed --noconfirm python2-macs2
 
@@ -71,6 +68,9 @@ RUN sudo pacman -S --needed --noconfirm python2-matplotlib
 
 # for working inside the image
 RUN sudo pacman -S --needed --noconfirm vim
+
+# install texlive
+RUN sudo pacman -S --needed --noconfirm texlive-most
 
 # switch to root user
 # TODO: try to redesign so that root is not needed
