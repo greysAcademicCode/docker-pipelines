@@ -55,6 +55,9 @@ RUN yaourt -Sa --needed --noconfirm ucsc-kent-genome-tools
 # install preseq
 RUN yaourt -Sa --needed --noconfirm preseq
 
+# install texlive
+RUN sudo -S --needed --noconfirm texlive-bin
+
 # install MACS2
 RUN yaourt -Sa --needed --noconfirm python2-macs2
 
