@@ -62,6 +62,7 @@ SIZEFILE="${SIZE_FILES}"/${GENOME_MODEL}.genome
 BT2INDEX="${BT2INDEX_DIR}"/${GENOME_MODEL}/${GENDER}/${GENOME_MODEL}${GENDER}
 
 for DATAPATH in "${INPUT_DIR}"/*/ ; do
+  echo
   echo "Processing ${DATAPATH}"
 
   # compute some pipleine variables
@@ -79,13 +80,23 @@ for DATAPATH in "${INPUT_DIR}"/*/ ; do
 
   # run the atac pipeline
   if [ "$USE_DOCKER" = true ] ; then
+    DOCKER_TEXT="(inside a Docker container) "
     docker stop atac >/dev/null 2>/dev/null
     docker rm atac >/dev/null 2>/dev/null
     DOCKER_PREFIX="docker run -v ${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
+    echo
+    echo "A Docker container will be used here. It will be run/setup in the following way:"
+    eval echo "$DOCKER_PREFIX"
   fi
   #$DOCKER_PREFIX bash
-  $DOCKER_PREFIX ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"
-  [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_FOLDER}"
+  RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
+  
+  echo
+  echo "Now running the ATAC-Seq Pipeline ${DOCKER_TEXT}with the following command:"
+  eval echo "${RUN_PIPELINE}"
+  echo
+  eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
+
+  [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_FOLDER}" 
   chmod -R o+r "${OUTPUT_FOLDER}"
-  # echo ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${OUTPUT_FOLDER}"
 done
