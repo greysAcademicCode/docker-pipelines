@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#TODO: find good example data. modify to run human and mouse in same command. fix preseq legend issue.
+
 # example Usage:
 # USE_DOCKER=true ./runATACPipeline.sh ./inputData/mouse mm9
 
@@ -11,26 +13,25 @@
 # and
 # B: Your docker user has permission to download the greyson/pipelines image (email grey@christoforo.net to ask)
 
-BASEDIR="$(pwd)"
+BASEDIR="$(dirname $(realpath $0))"
 
 # path to directory containing vplot index files
-VINDEX_DIR=${BASEDIR}/vPlotIndex/
+VINDEX_DIR="${BASEDIR}/vPlotIndex/"
 
 # path to pipelines repo directory
-PIPELINES_REPO=${BASEDIR}/pipelines/
+PIPELINES_REPO="${BASEDIR}/pipelines/"
 
 # path to directory containing size files
-SIZE_FILES=${BASEDIR}/genomeSize/
+SIZE_FILES="${BASEDIR}/genomeSize/"
 
 # path to bowtie 2 index directory
-BT2INDEX_DIR=${BASEDIR}/bowtie2Index/
+BT2INDEX_DIR="${BASEDIR}/bowtie2Index/"
 
 # here is a folder that will get filled with directories containing output files for each experiment
-OUTPUT_DIR=${BASEDIR}/ATACPipeOutput/
+OUTPUT_DIR="${BASEDIR}/ATACPipeOutput/"
 
 # this folder should contain one or more folders each containing two fastq files
-INPUT_DIR=$1
-INPUT_DIR=$(readlink -f $INPUT_DIR)
+INPUT_DIR=$(realpath $1)
 
 # genome model to match against (could be mm9 or hg19, etc.)
 #GENOME_MODEL=mm9
@@ -83,12 +84,15 @@ for DATAPATH in "${INPUT_DIR}"/*/ ; do
     DOCKER_TEXT="(inside a Docker container) "
     docker stop atac >/dev/null 2>/dev/null
     docker rm atac >/dev/null 2>/dev/null
-    DOCKER_PREFIX="docker run -v ${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
+    DOCKER_OPTS="-v ${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
+    DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
     echo
     echo "A Docker container will be used here. It will be run/setup in the following way:"
     eval echo "$DOCKER_PREFIX"
+    echo
+    echo "To enter the container interactively, use:"
+    eval echo "docker run -i ${DOCKER_OPTS} bash"
   fi
-  #$DOCKER_PREFIX bash
   RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
   
   echo
@@ -100,3 +104,45 @@ for DATAPATH in "${INPUT_DIR}"/*/ ; do
   [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_FOLDER}" 
   chmod -R o+r "${OUTPUT_FOLDER}"
 done
+
+
+realpath() {
+    canonicalize_path "$(resolve_symlinks "$1")"
+}
+
+resolve_symlinks() {
+    local dir_context path
+    path=$(readlink -- "$1")
+    if [ $? -eq 0 ]; then
+        dir_context=$(dirname -- "$1")
+        resolve_symlinks "$(_prepend_path_if_relative "$dir_context" "$path")"
+    else
+        printf '%s\n' "$1"
+    fi
+}
+
+_prepend_path_if_relative() {
+    case "$2" in
+        /* ) printf '%s\n' "$2" ;;
+         * ) printf '%s\n' "$1/$2" ;;
+    esac 
+}
+
+canonicalize_path() {
+    if [ -d "$1" ]; then
+        _canonicalize_dir_path "$1"
+    else
+        _canonicalize_file_path "$1"
+    fi
+}   
+
+_canonicalize_dir_path() {
+    (cd "$1" 2>/dev/null && pwd -P) 
+}           
+
+_canonicalize_file_path() {
+    local dir file
+    dir=$(dirname -- "$1")
+    file=$(basename -- "$1")
+    (cd "$dir" 2>/dev/null && printf '%s/%s\n' "$(pwd -P)" "$file")
+}
