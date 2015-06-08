@@ -76,6 +76,10 @@ RUN sudo pacman -S --needed --noconfirm texlive-most
 # TODO: try to redesign so that root is not needed
 USER 0
 
+# fix up fonts for gnuplot/preseq
+RUN pacman -S --needed --noconfirm ttf-liberation
+RUN fc-cache -vfs
+
 # cd to root's home dir
 WORKDIR /root
 
