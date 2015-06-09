@@ -1,6 +1,3 @@
 ATACPipeOutput/
 
-inputData/*
-!inputData/mouse/example/note.txt
-!inputData/mouse/example/Srr1930170_R1.fastq
-!inputData/mouse/example/Srr1930170_R2.fastq
+inputData/
