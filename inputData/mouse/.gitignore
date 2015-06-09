@@ -1,9 +1,0 @@
-# Ignore everything in this directory
-*
-# Except this file
-!.gitignore
-
-# and the example files
-!example/note.txt
-!example/Srr1930170_R1.fastq
-!example/Srr1930170_R2.fastq
