@@ -8,7 +8,7 @@
 # sorts the list, then
 # removes duplicate lines and puts theindex file into a folder ../vPlotIndex
 
-THIS_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+THIS_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)
 
 declare -a MODELS=("mm9" "mm10" "hg19" "hg38")
 TRACK_NAME="knownGene"

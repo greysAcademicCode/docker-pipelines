@@ -2,7 +2,7 @@
 
 # this script generates the chromosome size files for various models
 
-THIS_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+THIS_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)
 
 declare -a MODELS=("mm9" "mm10" "hg19" "hg38")
 OUT_DIR="${THIS_DIR}/../genomeSize"
