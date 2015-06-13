@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # Usage:
-# 1. (potentially optional) update the docker image by running this in a terminal: docker pull greyson/pipelines
-# 2. place your fastq data files in to the inputData folder (as described below)
-# 3. (optional) delete the example data files
-# 4. run the pipeline by executing ./runATACPipeline.sh in your terminal
-# 5. look for results to appear in a folder called ATACPipeOutput (the report .pdf file is probably what you want)
+# 1. place your fastq data files in to the inputData folder (as described below)
+# 2. (optional) delete the example data files
+# 3. run the pipeline by executing ./runATACPipeline.sh in your terminal
+# 4. look for results to appear in a folder called ATACPipeOutput (the report .pdf file is probably what you want)
 
 # NOTE: If you get an error when updating the docker image:
 # "FATA[0002] Error: image greyson/pipelines:latest not found"
@@ -20,8 +19,11 @@
 : ${HUMAN_MODEL:="hg19"}
 : ${GENDER:="male"}
 
+# pull the latest docker image (if needed)
+[ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
+
 # this is the absolute path to the directory of this script
-BASEDIR="$( cd "$(dirname "$0")" ; pwd -P )"
+BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 
 # this folder should contain subfolder(s) with named according to the species to be processed, i.e. "human and/or mouse"
 # you put folders containing your two fastq input data files into these species folders
@@ -49,9 +51,6 @@ BASEDIR="$( cd "$(dirname "$0")" ; pwd -P )"
 # cpu threads to use
 : ${THREADS:=4}
 #THREADS=$(nproc)
-
-# switch to run the pipeline in docker or not
-: ${USE_DOCKER:=true}
 
 #===========probably don't edit below here==========
 
