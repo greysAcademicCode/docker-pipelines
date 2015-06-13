@@ -2,3 +2,5 @@ ATACPipeOutput/
 
 inputData/
 *.zip
+*.fa
+*.fa.gz
