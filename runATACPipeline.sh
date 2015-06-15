@@ -123,7 +123,7 @@ for SPECIES in "${SPECIESES[@]}"; do
     else
       VINDEXFILE="${VINDEX_DIR}"/knownGene_${GENOME_MODEL}vPlotIndex.bed
       SIZEFILE="${SIZE_FILES}"/${GENOME_MODEL}.genome
-      BT2INDEX="${BT2INDEX_DIR}"/${GENOME_MODEL}/${GENDER}/${GENOME_MODEL}${GENDER}
+      BT2INDEX="${BT2INDEX_DIR}"/${GENOME_MODEL}
       process_data
     fi
   else
