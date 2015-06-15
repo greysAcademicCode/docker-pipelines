@@ -19,6 +19,6 @@ mkdir -p "${OUT_DIR}"
 for MODEL in "${MODELS[@]}"; do
   SAVE_FILE="${OUT_DIR}/${TRACK_NAME}_${MODEL}vPlotIndex.bed"
   echo "Making V-Plot index for $MODEL, $TRACK_NAME and saving to $SAVE_FILE..."
-  curl  -s "http://hgdownload.cse.ucsc.edu/goldenPath/${MODEL}/database/${TRACK_NAME}.txt.gz" | gunzip -c | awk -v OFS='\t' '{if ($3 == "+") {print $2, $4, $4+1, $3} else {print $2, $5, $5+1, $3}}'| sed 's/_[^\t]*\t/\t/' | sed '/chr[0-9]\|chrX\|chrY/!d' | sort -V | uniq > "$SAVE_FILE"
+  curl "http://hgdownload.cse.ucsc.edu/goldenPath/${MODEL}/database/${TRACK_NAME}.txt.gz" | gunzip -c | awk -v OFS='\t' '{if ($3 == "+") {print $2, $4, $4+1, $3} else {print $2, $5, $5+1, $3}}'| sed 's/_[^\t]*\t/\t/' | sed '/chr[0-9]\|chrX\|chrY/!d' | sort -V | uniq > "$SAVE_FILE"
   echo Done!
 done
