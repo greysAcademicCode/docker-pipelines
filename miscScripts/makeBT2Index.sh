@@ -16,13 +16,11 @@ for MODEL in "${MODELS[@]}"; do
     echo "Building bowtie2 index for $MODEL, $CHROM..."
     mkdir -p "$SOURCE_DIR/$MODEL"
     cd "$SOURCE_DIR/$MODEL"
-    [ ! -f "$CHROM.fa" ] && wget http://hgdownload.cse.ucsc.edu/goldenPath/$MODEL/chromosomes/$CHROM.fa.gz
-    [ ! -f "$CHROM.fa" ] && gunzip "$CHROM.fa.gz"
+    curl http://hgdownload.cse.ucsc.edu/goldenPath/$MODEL/chromosomes/$CHROM.fa.gz | gunzip -c > "$CHROM.fa"
   done < "$SIZE_FILE_DIR/${MODEL}.genome" 
   FA_LIST="$(ls -t *.fa | tr '\n' ',')"
   FA_LIST=${FA_LIST::-1}
-  echo $FA_LIST
   bowtie2-build $FA_LIST $MODEL
-  mv $MODEL* $OUT_DIR/
+  mv $MODEL* "$OUT_DIR/"
 done
 rm -rf ${SOURCE_DIR}
