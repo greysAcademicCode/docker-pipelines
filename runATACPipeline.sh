@@ -15,9 +15,8 @@
 
 # Setup some defaults
 : ${USE_DOCKER:=true}
-: ${MOUSE_MODEL:="mm9"}
-: ${HUMAN_MODEL:="hg19"}
-: ${GENDER:="male"}
+: ${MOUSE_MODEL:="mm10"}
+: ${HUMAN_MODEL:="hg38"}
 
 # pull the latest docker image (if needed)
 [ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
