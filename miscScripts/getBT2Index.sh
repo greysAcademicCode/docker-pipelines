@@ -10,5 +10,5 @@ EXPECTED="$THIS_DIR/../bowtie2Index/filesExpected.txt"
 
 cd "$THIS_DIR/../bowtie2Index"
 while read file; do
-  curl -O "$URL_BASE/${file}"
+  curl -L -O "$URL_BASE/${file}"
 done <"$EXPECTED"
