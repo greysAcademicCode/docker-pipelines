@@ -9,6 +9,6 @@ URL_BASE='https://googledrive.com/host/0B6SEJBJh9kL3flNRQ2x3SWhCUU1RUjdNb0NBVmcx
 EXPECTED="$THIS_DIR/../bowtie2Index/filesExpected.txt"
 
 cd "$THIS_DIR/../bowtie2Index"
-while read file; do
-  curl -L -O "$URL_BASE/${file}"
+while read line; do
+  curl -L -O "$URL_BASE/${line}"
 done <"$EXPECTED"

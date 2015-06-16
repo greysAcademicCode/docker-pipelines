@@ -1,4 +1,3 @@
-filesExpected.txt
 hg19.1.bt2
 hg19.2.bt2
 hg19.3.bt2

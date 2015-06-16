@@ -26,4 +26,4 @@ for MODEL in "${MODELS[@]}"; do
 done
 rm -rf ${SOURCE_DIR}
 cd "$OUT_DIR"
-ls -1 > filesExpected.txt
+ls -1 *.bt2 > filesExpected.txt
