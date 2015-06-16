@@ -25,3 +25,5 @@ for MODEL in "${MODELS[@]}"; do
   mv $MODEL* "$OUT_DIR/"
 done
 rm -rf ${SOURCE_DIR}
+cd "$OUT_DIR"
+ls -1 > filesExpected.txt

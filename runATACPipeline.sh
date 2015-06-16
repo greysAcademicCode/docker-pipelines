@@ -48,7 +48,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 : ${OUTPUT_DIR:="${BASEDIR}/ATACPipeOutput"}
 
 # cpu threads to use
-: ${THREADS:=4}
+: ${THREADS:=1}
 #THREADS=$(nproc)
 
 #===========probably don't edit below here==========
@@ -99,6 +99,8 @@ function process_data {
         eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
 
         [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_DIR}/${SPECIES}" && chmod -R o+r "${OUTPUT_FOLDER}"
+        mkdir -p "${OUTPUT_DIR}/reports"
+        cp "${OUTPUT_FOLDER}"/*.report.pdf "${OUTPUT_DIR}/reports/$SPECIES.$(basename "${OUTPUT_FOLDER}"/*.report.pdf)"
     else
       echo "Could not use the two input fastq data files."
     fi
