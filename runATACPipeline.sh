@@ -19,7 +19,7 @@
 : ${HUMAN_MODEL:="hg38"}
 
 # pull the latest docker image (if needed)
-[ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
+#[ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
 
 # this is the absolute path to the directory of this script
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
