@@ -61,11 +61,6 @@ else
   WINDOWS=false
 fi
 
-# add the pipeline scripts to PATH
-if [ "$USE_DOCKER" != true ] ; then
-  export PATH=$PATH:"${PIPELINES_REPO}"/atac
-fi
-
 function process_data {
   echo "Processing $SPECIES_DIR..."
   for DATAPATH in "${SPECIES_DIR}"/*/ ; do
@@ -86,10 +81,11 @@ function process_data {
 
         # run the atac pipeline
         if [ "$USE_DOCKER" = true ] ; then
-          DOCKER_TEXT="(inside a Docker container) "
           docker stop atac >/dev/null 2>/dev/null
           docker rm atac >/dev/null 2>/dev/null
-          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${WINSLASH}${READ1FILE}:${READ1FILE} -v ${WINSLASH}${READ2FILE}:${READ2FILE} -v ${WINSLASH}${SIZEFILE}:${SIZEFILE} -v ${WINSLASH}${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
+          R1NAME=$(basename $READ1FILE)
+          R2NAME=$(basename $READ2FILE)
+          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:/bt2 -v ${WINSLASH}${READ1FILE}:/${R1NAME} -v ${WINSLASH}${READ2FILE}:/${R2NAME} -v ${WINSLASH}${SIZEFILE}:/sizes -v ${WINSLASH}${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
@@ -97,18 +93,28 @@ function process_data {
           #echo
           #echo "To enter the container interactively, use:"
           #eval echo "docker run -i ${DOCKER_OPTS} bash"
+          RUN_PIPELINE='ATACpipeline.sh ${WINSLASH}/bt2/${GENOME_MODEL} ${WINSLASH}/${R1NAME} ${WINSLASH}/${R2NAME} ${THREADS} ${MODEL} ${WINSLASH}/sizes ${WINSLASH}/vindex ${WINSLASH}/output/${SPECIES}/${DATA_FOLDER}.output'
+          echo "Now running the ATAC-Seq Pipeline inside a docker container with the following command:"
+          
+          eval echo "${RUN_PIPELINE}"
+          echo
+          eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
+          #eval ${DOCKER_PREFIX} ${WINSLASH}/bin/bash ${WINSLASH}/pipeline/atac/ATACpipeline.sh
+           
+          docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${WINSLASH}${OUTPUT_DIR}/${SPECIES}" && chmod -R o+r "${WINSLASH}${OUTPUT_FOLDER}"
+        else
+          # add the pipeline scripts to PATH
+          export PATH=$PATH:"${PIPELINES_REPO}"/atac
+          RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
+          echo "Now running the ATAC-Seq Pipeline with the following command:"
+          eval echo "${RUN_PIPELINE}"
+          echo
+          eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
         fi
-        RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
-
-        echo
-        echo "Now running the ATAC-Seq Pipeline ${DOCKER_TEXT}with the following command:"
-        eval echo "${RUN_PIPELINE}"
-        echo
-        eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
-
-        [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${WINSLASH}${OUTPUT_DIR}/${SPECIES}" && chmod -R o+r "${WINSLASH}${OUTPUT_FOLDER}"
-        mkdir -p "${WINSLASH}${OUTPUT_DIR}/reports"
-        cp "${WINSLASH}${OUTPUT_FOLDER}"/*.report.pdf "${WINSLASH}${OUTPUT_DIR}/reports/$SPECIES.$(basename "${WINSLASH}${OUTPUT_FOLDER}"/*.report.pdf)"
+        
+        # split out reports to make them easier to find
+        mkdir -p "${OUTPUT_DIR}/reports"
+        cp "${OUTPUT_FOLDER}"/*.report.pdf "${OUTPUT_DIR}/reports/$SPECIES.$(basename "${OUTPUT_FOLDER}"/*.report.pdf)"
     else
       echo "Could not use the two input fastq data files."
     fi
