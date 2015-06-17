@@ -53,6 +53,14 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 
 #===========probably don't edit below here==========
 
+# detect Windows
+if [ -n "$MSYSTEM" ] ; then
+  WINDOWS=true
+  WINSLASH='/'
+else
+  WINDOWS=false
+fi
+
 # add the pipeline scripts to PATH
 if [ "$USE_DOCKER" != true ] ; then
   export PATH=$PATH:"${PIPELINES_REPO}"/atac
@@ -81,7 +89,7 @@ function process_data {
           DOCKER_TEXT="(inside a Docker container) "
           docker stop atac >/dev/null 2>/dev/null
           docker rm atac >/dev/null 2>/dev/null
-          DOCKER_OPTS="-v ${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${READ1FILE}:${READ1FILE} -v ${READ2FILE}:${READ2FILE} -v ${SIZEFILE}:${SIZEFILE} -v ${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
+          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:${BT2INDEX_DIR} -v ${WINSLASH}${READ1FILE}:${READ1FILE} -v ${WINSLASH}${READ2FILE}:${READ2FILE} -v ${WINSLASH}${SIZEFILE}:${SIZEFILE} -v ${WINSLASH}${VINDEXFILE}:${VINDEXFILE} --name atac -t greyson/pipelines"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
@@ -98,9 +106,9 @@ function process_data {
         echo
         eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
 
-        [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${OUTPUT_DIR}/${SPECIES}" && chmod -R o+r "${OUTPUT_FOLDER}"
-        mkdir -p "${OUTPUT_DIR}/reports"
-        cp "${OUTPUT_FOLDER}"/*.report.pdf "${OUTPUT_DIR}/reports/$SPECIES.$(basename "${OUTPUT_FOLDER}"/*.report.pdf)"
+        [ "$USE_DOCKER" = true ] && docker cp atac:"${OUTPUT_FOLDER}" "${WINSLASH}${OUTPUT_DIR}/${SPECIES}" && chmod -R o+r "${WINSLASH}${OUTPUT_FOLDER}"
+        mkdir -p "${WINSLASH}${OUTPUT_DIR}/reports"
+        cp "${WINSLASH}${OUTPUT_FOLDER}"/*.report.pdf "${WINSLASH}${OUTPUT_DIR}/reports/$SPECIES.$(basename "${WINSLASH}${OUTPUT_FOLDER}"/*.report.pdf)"
     else
       echo "Could not use the two input fastq data files."
     fi
