@@ -3,11 +3,13 @@
 # use UDR to (greatly) speed up downloads, if you don't have udr installed, set this to zero
 SUPER_FAST_DOWNLOAD=true
 
-if [ "SUPER_FAST_DOWNLOAD" = true ] ; then
-  if udr > /dev/null; then
+if [ "$SUPER_FAST_DOWNLOAD" = true ] ; then
+  udr --version > /dev/null 2> /dev/null
+  if [ "$?" = 1 ] ; then
     echo "Using UDR"
   else
    echo "set SUPER_FAST_DOWNLOAD=false or install UDR"
+   exit
   fi
 fi
 
@@ -27,7 +29,7 @@ for MODEL in "${MODELS[@]}"; do
     echo "Fetching fasta sequences for $MODEL, $CHROM..."
     mkdir -p "$SOURCE_DIR/$MODEL"
     cd "$SOURCE_DIR/$MODEL"
-    if [ "SUPER_FAST_DOWNLOAD" = true ] ; then
+    if [ "$SUPER_FAST_DOWNLOAD" = true ] ; then
       udr rsync -avP hgdownload.cse.ucsc.edu::goldenPath/$MODEL/chromosomes/$CHROM.fa.gz .
       gunzip -c $CHROM.fa.gz > "$CHROM.fa"
       rm $CHROM.fa.gz
