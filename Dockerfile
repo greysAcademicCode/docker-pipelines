@@ -28,7 +28,7 @@ RUN sudo pacman -S --needed --noconfirm subversion
 RUN yaourt -S --needed --noconfirm tophat
 
 # install gnuplot
-RUN yaourt -Sa --needed --noconfirm gnuplot
+RUN sudo pacman -S --needed --noconfirm gnuplot
 
 # install rsem 
 RUN yaourt -Sa --needed --noconfirm rsem

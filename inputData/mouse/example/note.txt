@@ -1,8 +1,0 @@
-Downloaded from:
-ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR193/000/SRR1930170/SRR1930170_1.fastq.gz
-and
-ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR193/000/SRR1930170/SRR1930170_2.fastq.gz
-then snipped with
-head -900000 SRR1930170_2.fastq | tail -80000 > Srr1930170_R2.fastq
-and
-head -900000 SRR1930170_1.fastq | tail -80000 > Srr1930170_R1.fastq

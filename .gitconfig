@@ -1,5 +1,0 @@
-[lfs]
-    url = "https://orcan.stanford.edu:9999/atac/atac"
-
-[http]
-    sslverify = false
