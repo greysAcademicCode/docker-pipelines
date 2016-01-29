@@ -2,10 +2,6 @@ FROM greyltc/lamp-aur
 MAINTAINER Grey Christoforo <grey@christoforo.net>
 # See [the wiki](https://github.com/greysAcademicCode/docker-pipelines/wiki) for more details.
 
-# use all possible cores for builds
-RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j$(nproc)",g' /etc/makepkg.conf
-#RUN sed -i 's,#MAKEFLAGS="-j2",MAKEFLAGS="-j4",g' /etc/makepkg.conf
-
 # atlas *should* speed things up for both python and R
 #RUN su docker -c 'pacaur -S --noedit --noconfirm atlas-lapack'
 #RUN su docker -c 'pacaur -S --noedit --noconfirm python2-numpy-atlas'
