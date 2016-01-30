@@ -41,6 +41,9 @@ RUN su docker -c 'pacaur -S --noedit --noconfirm bedtools'
 # install picard-tools
 RUN su docker -c 'pacaur -S --noedit --noconfirm picard-tools'
 
+# install ucsc tools
+RUN su docker -c 'pacaur -S --noedit --noconfirm ucsc-kent-genome-tools'
+
 # install preseq
 RUN su docker -c 'pacaur -S --noedit --noconfirm preseq'
 
@@ -68,10 +71,6 @@ USER 0
 # fix up fonts for gnuplot/preseq
 RUN pacman -S --needed --noconfirm ttf-liberation
 RUN fc-cache -vfs
-
-#TODO: fix this
-# install ucsc tools
-RUN su docker -c 'pacaur -S --noedit --noconfirm ucsc-kent-genome-tools'
 
 # cd to root's home dir
 WORKDIR /root
