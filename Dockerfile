@@ -77,6 +77,3 @@ ENV PATH /opt/pipelines/atac:$PATH
 # enable webdav
 ENV ENABLE_DAV true
 
-# install gateone 
-RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm dtach mutagen python2-imaging python2-pyopenssl gateone-git'
-RUN sed -i 's,sleep infinity,gateone,g' /usr/sbin/startServers.sh
