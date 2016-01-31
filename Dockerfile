@@ -1,4 +1,4 @@
-FROM greyltc/lamp-aur
+FROM greyltc/lamp-gateone
 MAINTAINER Grey Christoforo <grey@christoforo.net>
 # See [the wiki](https://github.com/greysAcademicCode/docker-pipelines/wiki) for more details.
 
