@@ -80,9 +80,3 @@ ENV ENABLE_DAV true
 # install gateone 
 RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm dtatch mutagen python2-imaging python2-pyopenssl gateone-git'
 RUN sed -i 's,sleep infinity,gateone,g' /usr/sbin/startServers.sh
-
-# change to non-root user
-USER docker
-
-# cd to home dir
-WORKDIR /home/docker
