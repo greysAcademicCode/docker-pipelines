@@ -14,7 +14,8 @@ RUN pacman -S --noprogressbar --needed --noconfirm luajit python2 python
 RUN pacman -S --noprogressbar --needed --noconfirm r
 
 # install bowtie2
-RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm intel-tbb bowtie2'
+RUN pacman -S --noprogressbar --needed --noconfirm intel-tbb
+RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm bowtie2'
 
 # install tophat (or RNA-seq) a bug means this should be installed before samtools
 RUN pacman -S --noprogressbar --needed --noconfirm subversion
