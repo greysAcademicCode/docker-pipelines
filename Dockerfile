@@ -40,7 +40,10 @@ RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm samtoo
 RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm bedtools'
 
 # install picard-tools
+RUN pacman -S --needed --noconfirm --noprogressbar jre8-openjdk-headless
+RUN archlinux-java set java-8-openjdk/jre
 RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm picard-tools'
+ENV PICARDROOT "/usr/share/java/picard-tools"
 
 # install ucsc tools
 RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm ucsc-kent-genome-tools'
