@@ -7,11 +7,11 @@
 # 4. look for results to appear in a folder called ATACPipeOutput (the report .pdf file is probably what you want)
 
 # NOTE: If you get an error when updating the docker image:
-# "FATA[0002] Error: image greyson/pipelines:latest not found"
+# "FATA[0002] Error: image greyson/pipelines:testing not found"
 # then make sure that
 # A: you're logged in with your docker user (run `docker login`)
 # and
-# B: Your docker user has permission to download the greyson/pipelines image (email grey@christoforo.net to ask)
+# B: Your docker user has permission to download the greyson/pipelines:testing image (email grey@christoforo.net to ask)
 
 # Setup some defaults
 : ${USE_DOCKER:=true}
@@ -19,7 +19,7 @@
 : ${HUMAN_MODEL:="hg38"}
 
 # pull the latest docker image (if needed)
-#[ "$USE_DOCKER" = true ] && docker pull greyson/pipelines
+[ "$USE_DOCKER" = true ] && docker pull greyson/pipelines:testing
 
 # this is the absolute path to the directory of this script
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
@@ -85,7 +85,7 @@ function process_data {
           docker rm atac >/dev/null 2>/dev/null
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
-          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:/bt2 -v ${WINSLASH}${READ1FILE}:/${R1NAME} -v ${WINSLASH}${READ2FILE}:/${R2NAME} -v ${WINSLASH}${SIZEFILE}:/sizes -v ${WINSLASH}${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
+          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:/bt2 -v ${WINSLASH}${READ1FILE}:/${R1NAME} -v ${WINSLASH}${READ2FILE}:/${R2NAME} -v ${WINSLASH}${SIZEFILE}:/sizes -v ${WINSLASH}${VINDEXFILE}:/vindex --name atac -t greyson/pipelines:testing"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
