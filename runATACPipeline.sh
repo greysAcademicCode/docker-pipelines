@@ -85,7 +85,7 @@ function process_data {
           docker rm atac >/dev/null 2>/dev/null
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
-          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:/bt2 -v ${WINSLASH}${READ1FILE}:/${R1NAME} -v ${WINSLASH}${READ2FILE}:/${R2NAME} -v ${WINSLASH}${SIZEFILE}:/sizes -v ${WINSLASH}${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
+          DOCKER_OPTS="-e PICARDROOT=/usr/share/java/picard-tools -v ${WINSLASH}${BT2INDEX_DIR}:/bt2 -v ${WINSLASH}${READ1FILE}:/${R1NAME} -v ${WINSLASH}${READ2FILE}:/${R2NAME} -v ${WINSLASH}${SIZEFILE}:/sizes -v ${WINSLASH}${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
