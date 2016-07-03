@@ -4,7 +4,6 @@ MAINTAINER Grey Christoforo <grey@christoforo.net>
 
 # do the bulk of the setup in this script
 ADD setup-pipeline.sh /usr/sbin/setup-pipeline
-RUN chmod +x /usr/sbin/setup-pipeline
 RUN setup-pipeline
 
 # tell the pipeline where to find picard
