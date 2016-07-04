@@ -38,8 +38,6 @@ su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm samtools'
 su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm bedtools'
 
 # install picard-tools
-pacman -S --needed --noconfirm --noprogressbar jre8-openjdk-headless
-archlinux-java set java-8-openjdk/jre
 su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm picard-tools'
 
 # install ucsc tools
