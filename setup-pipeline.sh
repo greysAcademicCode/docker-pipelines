@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -eu -o pipefail
 
 # atlas *should* speed things up for both python and R
 #su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm atlas-lapack'
