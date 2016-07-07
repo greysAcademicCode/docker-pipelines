@@ -90,9 +90,9 @@ function process_data {
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
           eval echo "$DOCKER_PREFIX"
-          echo
-          echo "To enter the container interactively, use:"
-          eval echo "docker run -i ${DOCKER_OPTS} bash"
+          #echo
+          #echo "To enter the container interactively, use:"
+          #eval echo "docker run -i ${DOCKER_OPTS} bash"
           RUN_PIPELINE='ATACpipeline.sh ${WINSLASH}/bt2/${GENOME_MODEL} ${WINSLASH}/${R1NAME} ${WINSLASH}/${R2NAME} ${THREADS} ${MODEL} ${WINSLASH}/sizes ${WINSLASH}/vindex ${WINSLASH}/output/${SPECIES}/${DATA_FOLDER}.output'
           echo "Now running the ATAC-Seq Pipeline inside a docker container with the following command:"
           
