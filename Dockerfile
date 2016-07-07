@@ -12,6 +12,12 @@ ENV PICARDROOT "/usr/share/java/picard-tools"
 # add the kundajelab pipelines repo to the image (https://github.com/kundajelab/pipelines)
 ADD pipelines /opt/pipelines
 
+# add kent utils to PATH
+
+ENV PATH /opt/ucsc-kent-genome-tools/bin:$PATH
+# TODO: have a look at adding/using the samtools included in the kent utils suite
+#(at /opt/ucsc-kent-genome-tools/samtabix)
+
 # add atac pipeline to PATH
 ENV PATH /opt/pipelines/atac:$PATH
 
