@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 # atlas *should* speed things up for both python and R
 #su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm atlas-lapack'
 #su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm python2-numpy-atlas'
