@@ -24,7 +24,7 @@ su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm tophat'
 pacman -S --needed --noconfirm --noprogressbar gnuplot
 
 # install rsem 
-RUN su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm rsem'
+su docker -c 'pacaur -S --noprogressbar --needed --noedit --noconfirm rsem'
 
 # install STAR rna aligner 
 #su docker -c 'pacaur -S --needed --noprogressbar --noedit --noconfirm vim star-cshl'
