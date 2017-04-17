@@ -1,4 +1,4 @@
-FROM greyltc/archlinux-aur
+FROM greyltc/lamp-gateone
 MAINTAINER Grey Christoforo <grey@christoforo.net>
 # See [the wiki](https://github.com/greysAcademicCode/docker-pipelines/wiki) for more details.
 
@@ -9,10 +9,19 @@ RUN install-pipeline-deps
 WORKDIR /root
 
 # add the entire pipelines repo to the image (https://github.com/kundajelab/pipelines)
-ADD pipelines /pipelines
+ADD pipelines /opt/pipelines
 
 # for picard tools
 ENV PICARDROOT "/usr/share/java/picard-tools"
 
+# for kent tools
+ENV PATH /opt/ucsc-kent-genome-tools/bin:$PATH
+
 # add atac pipeline to PATH
-ENV PATH /pipelines/atac:/usr/bin/kentUtils:$PATH
+ENV PATH /opt/pipelines/atac:$PATH
+
+# enable webdav
+ENV ENABLE_DAV true
+
+# start all the servers
+CMD run-sshd; run-gateone; start-servers; sleep infinity
