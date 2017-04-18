@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -eu -o pipefail
 
 # Usage:
 # 1. place your fastq data files in to the inputData folder (as described below)
@@ -56,7 +57,9 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 # detect Windows
 if [ -n "$MSYSTEM" ] ; then
   WINDOWS=true
-  WINSLASH='/'
+  export MSYS_NO_PATHCONV=1
+  export MSYS2_ARG_CONV_EXCL="*"
+  OUTPUT_DIR="$(echo "$OUTPUT_DIR" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')"
 else
   WINDOWS=false
 fi
@@ -81,27 +84,26 @@ function process_data {
 
         # run the atac pipeline
         if [ "$USE_DOCKER" = true ] ; then
-          docker stop atac >/dev/null 2>/dev/null
-          docker rm atac >/dev/null 2>/dev/null
+          docker stop atac >/dev/null 2>/dev/null || True
+          docker rm atac >/dev/null 2>/dev/null || True
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
-          DOCKER_OPTS="-v ${WINSLASH}${BT2INDEX_DIR}:/bt2 -v ${WINSLASH}${READ1FILE}:/${R1NAME} -v ${WINSLASH}${READ2FILE}:/${R2NAME} -v ${WINSLASH}${SIZEFILE}:/sizes -v ${WINSLASH}${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
+          DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
-          eval echo "$DOCKER_PREFIX"
+          eval echo '$DOCKER_PREFIX'
           #echo
           #echo "To enter the container interactively, use:"
           #eval echo "docker run -i ${DOCKER_OPTS} bash"
-          RUN_PIPELINE='ATACpipeline.sh ${WINSLASH}/bt2/${GENOME_MODEL} ${WINSLASH}/${R1NAME} ${WINSLASH}/${R2NAME} ${THREADS} ${MODEL} ${WINSLASH}/sizes ${WINSLASH}/vindex ${WINSLASH}/output/${SPECIES}/${DATA_FOLDER}.output'
+          RUN_PIPELINE='ATACpipeline.sh /bt2/${GENOME_MODEL} /data/${R1NAME} /data/${R2NAME} ${THREADS} ${MODEL} /sizes /vindex /output/${SPECIES}/${DATA_FOLDER}.output'
           echo "Now running the ATAC-Seq Pipeline inside a docker container with the following command:"
           
           eval echo "${RUN_PIPELINE}"
           echo
           eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
-          #eval ${DOCKER_PREFIX} ${WINSLASH}/bin/bash ${WINSLASH}/pipeline/atac/ATACpipeline.sh
            
-          docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${WINSLASH}${OUTPUT_DIR}/${SPECIES}" && chmod -R o+r "${WINSLASH}${OUTPUT_FOLDER}"
+          docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${OUTPUT_DIR}/${SPECIES}"
         else
           # add the pipeline scripts to PATH
           export PATH=$PATH:"${PIPELINES_REPO}"/atac
@@ -114,7 +116,7 @@ function process_data {
         
         # split out reports to make them easier to find
         mkdir -p "${OUTPUT_DIR}/reports"
-        cp "${OUTPUT_FOLDER}"/*.report.pdf "${OUTPUT_DIR}/reports/$SPECIES.$(basename "${OUTPUT_FOLDER}"/*.report.pdf)"
+        cp "${OUTPUT_DIR}/${SPECIES}/${DATA_FOLDER}.output.report.pdf" "${OUTPUT_DIR}/reports/$SPECIES.${DATA_FOLDER}.output.report.pdf" || True
     else
       echo "Could not use the two input fastq data files."
     fi
