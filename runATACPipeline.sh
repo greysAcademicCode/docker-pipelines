@@ -84,8 +84,8 @@ function process_data {
 
         # run the atac pipeline
         if [ "$USE_DOCKER" = true ] ; then
-          docker stop atac >/dev/null 2>/dev/null || True
-          docker rm atac >/dev/null 2>/dev/null || True
+          docker stop atac >/dev/null 2>/dev/null || true
+          docker rm atac >/dev/null 2>/dev/null || true
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
           DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
@@ -116,7 +116,7 @@ function process_data {
         
         # split out reports to make them easier to find
         mkdir -p "${OUTPUT_DIR}/reports"
-        cp "${OUTPUT_DIR}/${SPECIES}/${DATA_FOLDER}.output/${DATA_FOLDER}.output.report.pdf" "${OUTPUT_DIR}/reports/$SPECIES.${DATA_FOLDER}.output.report.pdf" || True
+        cp "${OUTPUT_DIR}/${SPECIES}/${DATA_FOLDER}.output/${DATA_FOLDER}.output.report.pdf" "${OUTPUT_DIR}/reports/$SPECIES.${DATA_FOLDER}.output.report.pdf" || true
     else
       echo "Could not use the two input fastq data files."
     fi
