@@ -10,9 +10,9 @@ cd "$THIS_DIR/../bowtie2Index"
 while read line; do
   line=${line%$'\r'}
   pair=($line) # file name and download ID
-  destination=${pair[0]}
+  destination="${pair[0]}"
   fileid=${pair[1]}
   echo "Downloading $destination"
-  python "$THIS_DIR/googleDriveGetFile.py" $fileid $destination
+  "$THIS_DIR/get-google-drive.sh" $fileid "$destination"
   echo "Done."
 done <"$EXPECTED"
