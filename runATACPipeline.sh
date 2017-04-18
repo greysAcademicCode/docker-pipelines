@@ -116,7 +116,7 @@ function process_data {
         
         # split out reports to make them easier to find
         mkdir -p "${OUTPUT_DIR}/reports"
-        cp "${OUTPUT_DIR}/${SPECIES}/${DATA_FOLDER}/${DATA_FOLDER}.output.report.pdf" "${OUTPUT_DIR}/reports/$SPECIES.${DATA_FOLDER}.output.report.pdf" || True
+        cp "${OUTPUT_DIR}/${SPECIES}/${DATA_FOLDER}.output/${DATA_FOLDER}.output.report.pdf" "${OUTPUT_DIR}/reports/$SPECIES.${DATA_FOLDER}.output.report.pdf" || True
     else
       echo "Could not use the two input fastq data files."
     fi
