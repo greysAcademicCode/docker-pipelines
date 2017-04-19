@@ -55,13 +55,13 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 #===========probably don't edit below here==========
 
 # detect Windows
-if [ -n "$MSYSTEM" ] ; then
+if [ -z ${MSYSTEM+x} ]; then
+  WINDOWS=false
+else
   WINDOWS=true
   export MSYS_NO_PATHCONV=1
   export MSYS2_ARG_CONV_EXCL="*"
   OUTPUT_DIR="$(echo "$OUTPUT_DIR" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')"
-else
-  WINDOWS=false
 fi
 
 function process_data {
@@ -105,6 +105,7 @@ function process_data {
            
           docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${OUTPUT_DIR}/${SPECIES}"
         else
+          DOCKER_PREFIX=""
           # add the pipeline scripts to PATH
           export PATH=$PATH:"${PIPELINES_REPO}"/atac
           RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
