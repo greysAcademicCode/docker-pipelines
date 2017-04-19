@@ -1,0 +1,35 @@
+diff --git a/atac/callATACpeaks.sh b/atac/callATACpeaks.sh
+index 4d3b537..8538a9c 100755
+--- a/atac/callATACpeaks.sh
++++ b/atac/callATACpeaks.sh
+@@ -37,12 +37,9 @@ fi
+ 
+ peakFile="${readBed}.pf"
+ 
+-# Shift reads by 75bp for peak calling
+-adjustedBed="slopBed -i ${readBed} -g ${chrSize} -l 75 -r -75 -s"
+-
+ macs2 callpeak \
+-    -t <(${adjustedBed}) -f BED -n "${peakFile}" -g "${genomeSize}" -p 1e-2 \
+-    --nomodel --shift "${fragLen}" -B --SPMR --keep-dup all --call-summits
++    -t "${readBed}" -f BED -n "${peakFile}" -g "${genomeSize}" -p 1e-2 \
++    --nomodel --shift -75 --extsize 150 -B --SPMR --keep-dup all --call-summits
+ 
+ if [[ ! -e "${peakFile}.fc.signal.bigwig" ]]
+ then
+@@ -52,6 +49,7 @@ then
+     slopBed -i "${peakFile}_FE.bdg" -g "${chrSize}" -b 0 | \
+         bedClip stdin "${chrSize}" "${peakFile}.fc.signal.bedgraph"
+     rm -f "${peakFile}_FE.bdg"
++    bedSort "${peakFile}.fc.signal.bedgraph" "${peakFile}.fc.signal.bedgraph"
+     bedGraphToBigWig "${peakFile}.fc.signal.bedgraph" "${chrSize}" "${peakFile}.fc.signal.bigwig"
+     rm -f "${peakFile}.fc.signal.bedgraph"
+ fi
+@@ -66,6 +64,7 @@ then
+     slopBed -i "${peakFile}_ppois.bdg" -g "${chrSize}" -b 0 | \
+         bedClip stdin "${chrSize}" "${peakFile}.pval.signal.bedgraph"
+     rm -f "${peakFile}_ppois.bdg"
++    bedSort "${peakFile}.pval.signal.bedgraph" "${peakFile}.pval.signal.bedgraph"
+     bedGraphToBigWig "${peakFile}.pval.signal.bedgraph" "${chrSize}" "${peakFile}.pval.signal.bigwig"
+     rm -f "${peakFile}.pval.signal.bedgraph"
+ fi
