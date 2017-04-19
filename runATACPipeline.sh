@@ -15,7 +15,7 @@ set -eu -o pipefail
 # B: Your docker user has permission to download the greyson/pipelines image (email grey@christoforo.net to ask)
 
 # Setup some defaults
-: ${USE_DOCKER:=true}
+: ${USE_DOCKER:=false}
 : ${MOUSE_MODEL:="mm10"}
 : ${HUMAN_MODEL:="hg38"}
 
@@ -88,7 +88,7 @@ function process_data {
           docker rm atac >/dev/null 2>/dev/null || true
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
-          DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t greyson/pipelines"
+          DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t greyson/pipelines:testing3"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
@@ -104,16 +104,16 @@ function process_data {
           eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
            
           docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${OUTPUT_DIR}/${SPECIES}"
-        else # not using docker
+        else # don't use docker
           pushd ${PIPELINES_REPO}
-          patch -p1 < ../pipelines.patch
-          popd
+	  patch -p1 < ../pipelines.patch
+	  popd
           DOCKER_PREFIX=""
-          if [ -z ${PICARD_HOME+x} ]; then
-            :
+	  if [ -z ${PICARD_HOME+x} ]; then
+	    :
           else
-            export PICARDROOT="$PICARD_HOME"
-          fi
+	    export PICARDROOT="$PICARD_HOME"
+	  fi
           # add the pipeline scripts to PATH
           export PATH=$PATH:"${PIPELINES_REPO}"/atac
           RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
