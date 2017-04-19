@@ -106,6 +106,11 @@ function process_data {
           docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${OUTPUT_DIR}/${SPECIES}"
         else
           DOCKER_PREFIX=""
+          if [ -z ${PICARD_HOME+x} ]; then
+            :
+          else
+            export PICARDROOT="$PICARD_HOME"
+          fi
           # add the pipeline scripts to PATH
           export PATH=$PATH:"${PIPELINES_REPO}"/atac
           RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
