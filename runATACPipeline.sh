@@ -104,7 +104,10 @@ function process_data {
           eval ${DOCKER_PREFIX} ${RUN_PIPELINE}
            
           docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${OUTPUT_DIR}/${SPECIES}"
-        else
+        else # not using docker
+          pushd ${PIPELINES_REPO}
+          patch -p1 < ../pipelines.patch
+          popd
           DOCKER_PREFIX=""
           if [ -z ${PICARD_HOME+x} ]; then
             :
