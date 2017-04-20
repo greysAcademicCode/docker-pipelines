@@ -84,11 +84,13 @@ function process_data {
 
         # run the atac pipeline
         if [ "$USE_DOCKER" = true ] ; then
+          DOCKER_IMAGE="greyson/pipelines:testing3"
           docker stop atac >/dev/null 2>/dev/null || true
           docker rm atac >/dev/null 2>/dev/null || true
+          docker pull ${DOCKER_IMAGE}
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
-          DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t greyson/pipelines:testing3"
+          DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t ${DOCKER_IMAGE}"
           DOCKER_PREFIX="docker run ${DOCKER_OPTS}"
           echo
           echo "A Docker container will be used here. It will be run/setup in the following way:"
