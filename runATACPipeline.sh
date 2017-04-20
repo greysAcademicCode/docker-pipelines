@@ -87,7 +87,7 @@ function process_data {
           DOCKER_IMAGE="greyson/pipelines:testing3"
           docker stop atac >/dev/null 2>/dev/null || true
           docker rm atac >/dev/null 2>/dev/null || true
-          docker pull ${DOCKER_IMAGE}
+          docker pull ${DOCKER_IMAGE} || true
           R1NAME=$(basename $READ1FILE)
           R2NAME=$(basename $READ2FILE)
           DOCKER_OPTS="-v ${BT2INDEX_DIR}:/bt2 -v ${DATAPATH}:/data -v ${SIZEFILE}:/sizes -v ${VINDEXFILE}:/vindex --name atac -t ${DOCKER_IMAGE}"
