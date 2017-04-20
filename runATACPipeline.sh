@@ -15,7 +15,7 @@ set -eu -o pipefail
 # B: Your docker user has permission to download the greyson/pipelines image (email grey@christoforo.net to ask)
 
 # Setup some defaults
-: ${USE_DOCKER:=false}
+: ${USE_DOCKER:=true}
 : ${MOUSE_MODEL:="mm10"}
 : ${HUMAN_MODEL:="hg38"}
 
