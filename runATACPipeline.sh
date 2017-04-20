@@ -105,15 +105,20 @@ function process_data {
            
           docker cp atac:/output/${SPECIES}/${DATA_FOLDER}.output "${OUTPUT_DIR}/${SPECIES}"
         else # don't use docker
-          pushd ${PIPELINES_REPO}
-	  patch -p1 < ../pipelines.patch
-	  popd
+          if [ ! -d "${PIPELINES_REPO}" ]; then
+            echo "You need to get the pipelines repo"
+            echo "Maybe: "
+            exit
+          fi
+          pushd "${PIPELINES_REPO}"
+          patch -r - --forward -p1 < ../pipelines.patch || true
+          popd
           DOCKER_PREFIX=""
-	  if [ -z ${PICARD_HOME+x} ]; then
-	    :
+          if [ -z ${PICARD_HOME+x} ]; then
+            :
           else
-	    export PICARDROOT="$PICARD_HOME"
-	  fi
+            export PICARDROOT="$PICARD_HOME"
+          fi
           # add the pipeline scripts to PATH
           export PATH=$PATH:"${PIPELINES_REPO}"/atac
           RUN_PIPELINE='ATACpipeline.sh "${BT2INDEX}" "${READ1FILE}" "${READ2FILE}" ${THREADS} ${MODEL} "${SIZEFILE}" "${VINDEXFILE}" "${OUTPUT_FOLDER}"'
