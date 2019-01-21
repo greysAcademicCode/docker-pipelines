@@ -84,7 +84,7 @@ function process_data {
 
         # run the atac pipeline
         if [ "$USE_DOCKER" = true ] ; then
-          DOCKER_IMAGE="greyson/pipelines:testing3"
+          DOCKER_IMAGE="greyson/pipelines:latest"
           docker stop atac >/dev/null 2>/dev/null || true
           docker rm atac >/dev/null 2>/dev/null || true
           docker pull ${DOCKER_IMAGE} || true

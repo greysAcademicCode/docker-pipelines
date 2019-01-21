@@ -13,7 +13,7 @@ ADD pipelines /opt/pipelines
 
 # patch the pipeline
 ADD pipelines.patch /tmp/pipelines.patch
-RUN cd /opt/pipelines; patch -p1 /tmp/pipelines.patch
+RUN cd /opt/pipelines; patch -p1 < /tmp/pipelines.patch
 
 # for picard tools
 ENV PICARDROOT "/usr/share/java/picard-tools"
