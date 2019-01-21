@@ -49,8 +49,8 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 : ${OUTPUT_DIR:="${BASEDIR}/ATACPipeOutput"}
 
 # cpu threads to use
-: ${THREADS:=1}
-#THREADS=$(nproc)
+#: ${THREADS:=1}
+THREADS=$(nproc)
 
 #===========probably don't edit below here==========
 
