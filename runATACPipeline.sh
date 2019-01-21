@@ -50,7 +50,7 @@ BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd -P)"
 
 # cpu threads to use
 : ${THREADS:=1}
-#THREADS=$(nproc)
+THREADS=$(nproc)
 
 #===========probably don't edit below here==========
 
